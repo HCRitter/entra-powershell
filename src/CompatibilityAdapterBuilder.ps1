@@ -621,7 +621,16 @@ $($Command.CustomScript)
             "Get-EntraDirectoryRole",
             "Get-EntraServicePrincipal",
             "Get-EntraAdministrativeUnit",
-            "Get-EntraDirectoryRoleAssignment"
+            "Get-EntraDirectoryRoleAssignment",
+            "Get-EntraBetaCustomSecurityAttributeDefinitionAllowedValue",
+            "Get-EntraBetaFeatureRolloutPolicy",
+            "Get-EntraBetaGroup",
+            "Get-EntraBetaPrivilegedResource",
+            "Get-EntraBetaServicePrincipal",
+            "Get-EntraBetaAdministrativeUnit",
+            "Get-EntraBetaAdministrativeUnit",
+            "Get-EntraBetaDevice", 
+            "Get-EntraBetaPrivilegedRoleDefinition"
         )
         
         
@@ -841,13 +850,29 @@ $OutputTransformations
     }
 
     hidden [string] GetParameterTransformationName([string] $OldName, [string] $NewName){
-        $paramBlock = @"
-    if(`$null -ne `$PSBoundParameters["$($OldName)"])
+#         $paramBlock = @"
+#     if(`$null -ne `$PSBoundParameters["$($OldName)"])
+#     {
+#         `$params["$($NewName)"] = `$PSBoundParameters["$($OldName)"]
+        
+#     }
+
+# "@
+        $paramBlock = if ($OldName -eq "Top") {@"
+    if (`$PSBoundParameters.ContainsKey(`"Top`"))
     {
         `$params["$($NewName)"] = `$PSBoundParameters["$($OldName)"]
     }
 
 "@
+        } else {@"
+    if (`$null -ne `$PSBoundParameters["$($OldName)"])
+    {
+        `$params["$($NewName)"] = `$PSBoundParameters["$($OldName)"]
+    }
+
+"@
+}
         return $paramBlock
     }
 
